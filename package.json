@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
+    "@react-three/drei": "^9.90.0",
     "@react-three/fiber": "^8.15.12",
     "@types/three": "^0.159.0",
     "expo": "~49.0.15",
