@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
@@ -27,44 +27,24 @@ export default function App() {
   }, []);
 
   return (
-    <View style={{width: '100vw', header: '200vh'}}>
+    <View style={{minWidth: '100vw', miHeight: '100vh'}}>
       <Header />
-      <View style={[style.padding, style.flexDirection]}>
-        <Model />
-        <View style={style.flexColumn}>
+      <View style={[style.padding, style.flexColumn]}>
+        <Model scrollPosition={scrollPosition} />
         {
           archers ? archers.map((archer, index) => (
               <Article name={archer.nom} country={archer.pays} description={archer.description} disciplin={archer.discipline} image={archer.image} key={index} />
           )) : null
         }
-        </View>
-
-      <View >
-        <Model scrollPosition={scrollPosition} />
       </View>
     </View>
   );
 }
 
-const style = StyleSheet.create({
-  padding : {
-    paddingHorizontal: '2rem'
-  },
-  flex: {
-    flexDirection: 'column',
-    gap:'5rem'
-  },
-  flexColumn: {
-    flexDirection: 'column',
-    gap:'1rem'
-  }
-})
-
-});
 
 const Model = ({ scrollPosition }) => {
   return (
-    <Canvas style={{width: '100vw', height: '100vh', position: 'absolute', overflow: 'hidden'}}>
+    <Canvas style={style.canvas}>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
       <MyModel scrollPosition={scrollPosition} />
@@ -78,6 +58,28 @@ function MyModel({ scrollPosition }) {
   const rotation = scrollPosition * Math.PI / 360;
   gltf.scene.rotation.y = rotation;
 
-  return <primitive object={gltf.scene} position={[0, 0, 0]} scale={2}
+  return <primitive object={gltf.scene} position={[-0.5, -2.2, 0]} scale={3.5}
   />;
 }
+
+const style = StyleSheet.create({
+  padding : {
+    paddingHorizontal: '2rem'
+  },
+  flexColumn: {
+    flexDirection: 'column',
+    gap:'2rem',
+    paddingBottom: '2rem'
+
+  },
+  canvas: {
+    position: 'sticky',
+    zIndex: 50,
+    left: 0,
+    top: 0,
+    height: "100vh",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+})
