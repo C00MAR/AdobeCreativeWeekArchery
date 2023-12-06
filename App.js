@@ -6,6 +6,8 @@ import model from './assets/arc_long.gltf'
 import Header from './components/Header';
 import Hero from './components/Hero';
 import {GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import Article from './components/Article';
+import archers from './Json/Archers';
 
 
 export default function App() {
@@ -13,8 +15,14 @@ export default function App() {
     <View style={{width: '100vw'}}>
       <Header />
       <View style={[style.padding, style.flexDirection]}>
-        <Hero />
         <Model />
+        <View style={style.flexColumn}>
+        {
+          archers ? archers.map((archer, index) => (
+              <Article name={archer.nom} country={archer.pays} description={archer.description} disciplin={archer.discipline} image={archer.image} key={index} />
+          )) : null
+        }
+        </View>
       </View>
     </View>
   );
@@ -27,6 +35,10 @@ const style = StyleSheet.create({
   flex: {
     flexDirection: 'column',
     gap:'5rem'
+  },
+  flexColumn: {
+    flexDirection: 'column',
+    gap:'1rem'
   }
 })
 
