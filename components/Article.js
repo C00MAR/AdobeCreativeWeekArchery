@@ -4,7 +4,7 @@ import { View,StyleSheet, Text, Image } from 'react-native';
 const Article = ({name, country, disciplin, description, image}) => {
 
     return(
-        <View style={[styles.shadowProp, styles.container]}>
+        <View style={[styles.shadowProp, styles.container ]}>
             <Image 
                 style={styles.image}
                 source={image}
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: "1%",
         overflow: 'hidden',
+        maxWidth: "80%",
     },
     secondContainer: {
         flexDirection: "column",
