@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react'
-import { Canvas, useLoader  } from '@react-three/fiber';
+import React, { useState, useEffect } from 'react';
+import { Canvas, useLoader } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-import model from './assets/arc_long.gltf'
+import model from './assets/adobe_arc_classique.gltf';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import {GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -11,8 +11,23 @@ import archers from './Json/Archers';
 
 
 export default function App() {
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const position = window.pageYOffset;
+      setScrollPosition(position);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <View style={{width: '100vw'}}>
+    <View style={{width: '100vw', header: '200vh'}}>
       <Header />
       <View style={[style.padding, style.flexDirection]}>
         <Model />
@@ -23,6 +38,9 @@ export default function App() {
           )) : null
         }
         </View>
+
+      <View >
+        <Model scrollPosition={scrollPosition} />
       </View>
     </View>
   );
@@ -42,18 +60,24 @@ const style = StyleSheet.create({
   }
 })
 
-const Model = () => {
+});
 
+const Model = ({ scrollPosition }) => {
   return (
-      <Canvas style={{width: '100%', height: '50vh'}}>
-        <ambientLight />
-        <pointLight position={[10, 10, 10]} />
-        <MyModel />
-      </Canvas>
-  )
-}
+    <Canvas style={{width: '100vw', height: '100vh', position: 'absolute', overflow: 'hidden'}}>
+      <ambientLight />
+      <pointLight position={[10, 10, 10]} />
+      <MyModel scrollPosition={scrollPosition} />
+    </Canvas>
+  );
+};
 
-function MyModel() {
-  const gltf = useLoader(GLTFLoader, model)
-  return <primitive object={gltf.scene}  position={[0, -10, -20]}/>;
+function MyModel({ scrollPosition }) {
+  const gltf = useLoader(GLTFLoader, model);
+
+  const rotation = scrollPosition * Math.PI / 360;
+  gltf.scene.rotation.y = rotation;
+
+  return <primitive object={gltf.scene} position={[0, 0, 0]} scale={2}
+  />;
 }
