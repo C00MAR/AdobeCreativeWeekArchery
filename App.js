@@ -1,10 +1,9 @@
 import { StyleSheet, View, Dimensions } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
-import model from './assets/adobe_arc_classique.gltf';
+import { useGLTF, useTexture } from '@react-three/drei';
+import model from './assets/adobe_cible.gltf';
 import Header from './components/Header';
-import Hero from './components/Hero';
 import {GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Article from './components/Article';
 import archers from './Json/Archers';
@@ -29,8 +28,8 @@ export default function App() {
   return (
     <View style={{minWidth: '100vw', miHeight: '100vh'}}>
       <Header />
-      <View style={[style.padding, style.flexColumn]}>
-        <Model scrollPosition={scrollPosition} />
+      <View style={[style.flexColumn]}>
+        <Model scrollPosition={scrollPosition}/>
         {
           archers ? archers.map((archer, index) => (
               <Article name={archer.nom} country={archer.pays} description={archer.description} disciplin={archer.discipline} image={archer.image} key={index} />
@@ -41,36 +40,36 @@ export default function App() {
   );
 }
 
-
 const Model = ({ scrollPosition }) => {
   return (
     <Canvas style={style.canvas}>
       <ambientLight />
-      <pointLight position={[10, 10, 10]} />
-      <MyModel scrollPosition={scrollPosition} />
+      <pointLight />
+      <MyModel scrollPosition={scrollPosition} scaleRatio={"4.5"} />
     </Canvas>
   );
 };
 
-function MyModel({ scrollPosition }) {
+function MyModel({ scrollPosition }, { scaleRatio }) {
   const gltf = useLoader(GLTFLoader, model);
 
   const rotation = scrollPosition * Math.PI / 360;
   gltf.scene.rotation.y = rotation;
+  gltf.scene.scale.y -= 0.01;
+  gltf.scene.scale.x -= 0.01;
+  gltf.scene.scale.z -= 0.01;
 
-  return <primitive object={gltf.scene} position={[-0.5, -2.2, 0]} scale={3.5}
+
+  return <primitive object={gltf.scene} position={[0, 0, 0]} scale={scaleRatio}
   />;
 }
 
 const style = StyleSheet.create({
-  padding : {
-    paddingHorizontal: '2rem'
-  },
   flexColumn: {
     flexDirection: 'column',
     gap:'2rem',
-    paddingBottom: '2rem'
-
+    paddingBottom: '2rem',
+    alignItems: 'center'
   },
   canvas: {
     position: 'sticky',
